@@ -1,22 +1,32 @@
 <?php
 
+namespace Pion\Metno;
+
+use JetBrains\PhpStorm\Pure;
+
 /**
  * @author Martin Kluska @ iMakers, s.r.o. <martin.kluska@imakers.cz>
  * @copyright iMakers, s.r.o.
  * @copyright Martin Kluska
- * @web http://imakers.cz
+ * @web https://imakers.cz
  * 
  * 
  * Symbol documentation (string in lower case): 
  * @link http://api.met.no/weatherapi/weathericon/1.0/documentation
  */
 
-class METnoCustomSymbol extends METnoSymbol {
-    static protected $fileFormat    = ".png";    
-    
+class MetnoCustomSymbol extends MetnoSymbol
+{
+    /**
+     * @var string 
+     */
+    static protected string $fileFormat = ".png";
+
     /**
      * Sets file format (extension) without dot
-     * @param type $fileFormat
+     * 
+     * @param $fileFormat
+     * @return void
      */
     static public function setFileFormat($fileFormat) {
         if ($fileFormat != "") {
@@ -25,23 +35,30 @@ class METnoCustomSymbol extends METnoSymbol {
             self::$fileFormat = $fileFormat;
         }
     }
-        
+
     /**
      * Returns global file format for icon
-     * @return type
+     * 
+     * @return string
      */
-    static public function getFileFormat() {
+    static public function getFileFormat(): string
+    {
         return self::$fileFormat;
     }
-    
+
     /**
      * Return url of the image with defined file format
-     * 
+     *
      * @link http://api.met.no/weatherapi/weathericon/1.0/documentation
-     * @return string NUMBER-LOWERED_NAME.FILE_FORMAT
+     * @return string
      */
-    public function getUrl() {
-        return $this->number."-".strtolower($this->name).METnoCustomSymbol::getFileFormat();
-    }    
+    #[Pure]
+    public function getUrl(): string
+    {
+        return sprintf("%s-%s%s",
+            $this->number,
+            strtolower($this->name),
+            MetnoCustomSymbol::getFileFormat()
+        );
+    }
 }
-?>

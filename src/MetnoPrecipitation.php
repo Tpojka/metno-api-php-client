@@ -1,14 +1,16 @@
 <?php
 
+namespace Pion\Metno;
+
 /**
  * @author Martin Kluska @ iMakers, s.r.o. <martin.kluska@imakers.cz>
  * @copyright iMakers, s.r.o.
  * @copyright Martin Kluska
- * @web http://imakers.cz
+ * @web https://imakers.cz
  * 
  */
 
-class METnoPrecipitation {
+class MetnoPrecipitation {
     protected $value    = 0;
     protected $min      = 0;
     protected $max      = 0;
@@ -35,4 +37,3 @@ class METnoPrecipitation {
         return $this->max;
     }
 }
-?>

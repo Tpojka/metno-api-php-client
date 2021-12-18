@@ -1,10 +1,12 @@
 <?php
 
+namespace Pion\Metno;
+
 /**
  * @author Martin Kluska @ iMakers, s.r.o. <martin.kluska@imakers.cz>
  * @copyright iMakers, s.r.o.
  * @copyright Martin Kluska
- * @web http://imakers.cz
+ * @web https://imakers.cz
  * 
  * 
  * 
@@ -12,7 +14,7 @@
  * @todo correct hour symbol from different symbol form to
  */
 
-class METnoDay extends METnoForecast {
+class MetnoDay extends MetnoForecast {
     /**
      * For internal work with main METno instance (about location etc)
      * @var METno 
@@ -294,4 +296,3 @@ class METnoDay extends METnoForecast {
     }
     
 }
-?>
