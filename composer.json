@@ -20,7 +20,8 @@
     "minimum-stability": "dev",
     "require": {
         "php" : "^7.4|^8.0",
-        "ext-curl" : "*"
+        "ext-curl" : "*",
+        "guzzlehttp/guzzle": "7.4.x-dev"
     },
     "autoload" : {
         "psr-4": {

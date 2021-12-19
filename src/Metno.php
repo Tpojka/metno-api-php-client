@@ -3,6 +3,8 @@
 namespace Pion\Metno;
 
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Pion\Metno\Contract\MetnoInterface;
 
 /**
@@ -67,35 +69,26 @@ class Metno extends MetnoFactory
     }
 
     /**
-     * Sends CURL request and returns the content if no error
+     * Sends Guzzle request and returns the content if no error
      * 
      * @param $url
-     * @return bool|string|void
+     * @return false|string|void
+     * @throws GuzzleException
      */
     protected function sendRequest($url)
     {
         try {
-            $curl = curl_init();
+            $client = new Client();
 
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_HEADER, true);
-            curl_setopt($curl, 42, '');
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            $response = $client->request('GET', $url, [
+                'headers' => [
+                    'User-Agent' => 'metno-api-php-client github.com/Tpojka',
+                    'Accept'     => 'application/json'
+                ]
+            ]);
+
+            return $response->getBody()->getContents();
             
-            curl_setopt($curl, CURLOPT_USERAGENT, 'metno-api-php-client github.com/Tpojka');
-
-            $content = curl_exec($curl);
-
-            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-            if (curl_getinfo($curl, CURLINFO_HTTP_CODE) == 200) {
-                curl_close($curl);
-                return $content;
-            } else {
-                curl_close($curl);
-                throw new Exception("Error with downloading file from $url with HTTP Code: $httpCode", MetnoInterface::DOWNLOAD_FAILED);
-            }
         } catch (Exception $e) {
             return $this->error($e);
         }
