@@ -142,15 +142,14 @@ class MetnoFactory implements MetnoInterface
      */
     static public function setHourForDayForecast(int $hour): bool
     {
-        $hour = intval($hour);
-        if ($hour >= 0 && $hour <= 23) {
-            self::$dayForecastHighest = false;
-            self::$dayForecastByHour = $hour;
-
-            return true;
+        if (!in_array($hour, range(0, 23))) {
+            return false;
         }
 
-        return false;
+        self::$dayForecastHighest = false;
+        self::$dayForecastByHour = $hour;
+
+        return true;
     }
 
     /**
@@ -162,15 +161,14 @@ class MetnoFactory implements MetnoInterface
      */
     static public function setHourForNightForecast(int $hour): bool
     {
-        $hour = intval($hour);
-        if ($hour >= 0 && $hour <= 23) {
-            self::$nightForecastLowest = false;
-            self::$nightForecastByHour = $hour;
-
-            return true;
+        if (!in_array($hour, range(0, 23))) {
+            return false;
         }
 
-        return false;
+        self::$nightForecastLowest = false;
+        self::$nightForecastByHour = $hour;
+
+        return true;
     }
 
     /**
@@ -181,18 +179,17 @@ class MetnoFactory implements MetnoInterface
      */
     static public function setHourWhenNightStarts(int $hour): bool
     {
-        $hour = intval($hour);
-        if ($hour >= 0 && $hour <= 23) {
-            self::$nightHourStart = $hour;
-
-            return true;
+        if (!in_array($hour, range(0, 23))) {
+            return false;
         }
 
-        return false;
+        self::$nightHourStart = $hour;
+
+        return true;
     }
 
     /**
-     * Sets if the day forecast should be choosed by highest temperature or
+     * Sets if the day forecast should be chosen by highest temperature or
      * defined hour <MetnoFactory::setHourForDayForecast()>
      * 
      * @param bool $set
@@ -229,14 +226,12 @@ class MetnoFactory implements MetnoInterface
      */
     static public function setSymbolClass(string $class_name): bool
     {
-        self::loadClass($class_name); // try to load class if not present
-        if (class_exists($class_name)) {
-            self::$classSymbol = $class_name;
-
-            return true;
+        if (!class_exists($class_name)) {
+            return false;
         }
 
-        return false;
+        self::$classSymbol = $class_name;
+        return true;
     }
 
     /**
@@ -250,33 +245,13 @@ class MetnoFactory implements MetnoInterface
      */
     static public function setPrecipitationClass($class_name): bool
     {
-        if (!class_exists($class_name) && file_exists($class_name . ".php")) {
-            require_once $class_name . ".php";
-        }
-        if (class_exists($class_name)) {
-            self::$classPrecipitation = $class_name;
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $class_name
-     * @return void
-     */
-    static protected function loadClass($class_name)
-    {
         if (!class_exists($class_name)) {
-            if (file_exists(__DIR__ . "/" . $class_name . ".php")) {
-                require_once __DIR__ . "/" . $class_name . ".php";
-            } else {
-                if (file_exists($class_name . ".php")) {
-                    require_once $class_name . ".php";
-                }
-            }
+            return false;
         }
+
+        self::$classPrecipitation = $class_name;
+
+        return true;
     }
 
     /**
@@ -322,26 +297,7 @@ class MetnoFactory implements MetnoInterface
      */
     static public function getForecastByLatLon(float $lat, float $lon, ?int $seaLevel = null): Metno
     {
-        $yr = new Metno($lat, $lon, $seaLevel);
-        $yr->getForecast();
-
-        return $yr;
-    }
-
-    /**
-     * Gets forecast for the location defined by the adress using google
-     *
-     * @param string $locationName
-     * @return Metno
-     */
-    static public function getForecastByLocation(string $locationName): Metno
-    {
-        $lat = 0;
-        $lon = 0;
-        $yr = new Metno($lat, $lon);
-        $yr->getForecast();
-
-        return $yr;
+        return new Metno($lat, $lon, $seaLevel);
     }
 
     /**
@@ -365,7 +321,7 @@ class MetnoFactory implements MetnoInterface
      * @param $date
      * @return false|string
      */
-    static public function getTime($date): bool|string
+    static public function getTime($date)
     {
         if (preg_match("~[\d]{4}-[\d]{2}-[\d]{2}T([\d]{2}):([\d]{2})~", $date, $match)
             && isset($match[1])
@@ -382,7 +338,7 @@ class MetnoFactory implements MetnoInterface
      * @param $date
      * @return false|int
      */
-    static public function getHour($date): bool|int
+    static public function getHour($date)
     {
         if (preg_match("~[\d]{4}-[\d]{2}-[\d]{2}T([\d]{2}):[\d]{2}~", $date, $match)
             && isset($match[1])) {
@@ -405,7 +361,7 @@ class MetnoFactory implements MetnoInterface
         SimpleXMLElement $attributes,
         $attributeKey,
         int $floatValAndRoundByDecimals = -1
-    ): float|bool|int {
+    ) {
         if (isset($attributes[$attributeKey])) {
             $value = $attributes[$attributeKey]->__toString();
             if ($floatValAndRoundByDecimals != -1) {
