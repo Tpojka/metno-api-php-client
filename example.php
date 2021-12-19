@@ -10,17 +10,16 @@
  */
 
 use Pion\Metno\MetnoFactory;
+use Pion\Metno\Metno;
 
 if (!require_once 'vendor/autoload.php') {
     exit('Have you forgotten to run "composer install"?');
 }
 
-MetnoFactory::setHourForDayForecast(14);
-MetnoFactory::setTemperatureDecimals(1);
+//MetnoFactory::setHourForDayForecast(14);
+//MetnoFactory::setTemperatureDecimals(1);
 
-$forecastBrno   = MetnoFactory::getForecastByLatLon(49.199205, 16.598866);
-
-var_dump($forecastBrno);
+echo (new Metno(44.8125, 20.4612));
 
 // forecast in loop where you get desired days
 // example using custom symbol in own directory
