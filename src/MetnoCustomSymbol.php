@@ -2,8 +2,6 @@
 
 namespace Pion\Metno;
 
-use JetBrains\PhpStorm\Pure;
-
 /**
  * @author Martin Kluska @ iMakers, s.r.o. <martin.kluska@imakers.cz>
  * @copyright iMakers, s.r.o.
@@ -52,7 +50,6 @@ class MetnoCustomSymbol extends MetnoSymbol
      * @link http://api.met.no/weatherapi/weathericon/1.0/documentation
      * @return string
      */
-    #[Pure]
     public function getUrl(): string
     {
         return sprintf("%s-%s%s",

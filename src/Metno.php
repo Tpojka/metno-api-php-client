@@ -3,7 +3,6 @@
 namespace Pion\Metno;
 
 use Exception;
-use JetBrains\PhpStorm\Pure;
 use Pion\Metno\Contract\MetnoInterface;
 
 /**
@@ -33,7 +32,7 @@ class Metno extends MetnoFactory
      * 
      * @var bool|Exception 
      */
-    protected bool|Exception $error = false;
+    protected $error = false;
 
     /**
      * @var string 
@@ -83,10 +82,8 @@ class Metno extends MetnoFactory
             curl_setopt($curl, 42, '');
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-
-//            curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36');
             
-            curl_setopt($curl, CURLOPT_USERAGENT, 'metno-php-api github.com/acmeweatherapp');
+            curl_setopt($curl, CURLOPT_USERAGENT, 'metno-api-php-client github.com/Tpojka');
 
             $content = curl_exec($curl);
 
@@ -102,7 +99,6 @@ class Metno extends MetnoFactory
         } catch (Exception $e) {
             return $this->error($e);
         }
-        return false;
     }
 
     /**
@@ -188,7 +184,7 @@ class Metno extends MetnoFactory
      * @return bool|MetnoForecast
      * @throws Exception
      */
-    public function today(): bool|MetnoForecast
+    public function today()
     {
         return $this->getForecastForDate(date("Y-m-d"));
     }
@@ -199,7 +195,7 @@ class Metno extends MetnoFactory
      * @return bool|MetnoForecast
      * @throws Exception
      */
-    public function tomorrow(): bool|MetnoForecast
+    public function tomorrow()
     {
         return $this->getForecastForDate(date("Y-m-d", strtotime("+1 DAY")));
     }
@@ -210,7 +206,7 @@ class Metno extends MetnoFactory
      * @return bool|MetnoForecast
      * @throws Exception
      */
-    public function in2Days(): bool|MetnoForecast
+    public function in2Days()
     {
         return $this->getForecastForDate(date("Y-m-d",  strtotime("+2 DAY")));
     }
@@ -221,18 +217,18 @@ class Metno extends MetnoFactory
      * @return bool|MetnoForecast
      * @throws Exception
      */
-    public function in3Days(): bool|MetnoForecast
+    public function in3Days()
     {
         return $this->getForecastForDate(date("Y-m-d",  strtotime("+3 DAY")));
     }
 
     /**
-     * Return forecast in 4 days wich can be printed/echo to get current temperature
+     * Return forecast in 4 days which can be printed/echo to get current temperature
      * 
      * @return bool|MetnoForecast
      * @throws Exception
      */
-    public function in4Days(): bool|MetnoForecast
+    public function in4Days()
     {
         return $this->getForecastForDate(date("Y-m-d",  strtotime("+4 DAY")));
     }
@@ -243,7 +239,7 @@ class Metno extends MetnoFactory
      * @return bool|MetnoForecast
      * @throws Exception
      */
-    public function in5Days(): bool|MetnoForecast
+    public function in5Days()
     {
         return $this->getForecastForDate(date("Y-m-d",  strtotime("+5 DAY")));
     }
@@ -273,7 +269,7 @@ class Metno extends MetnoFactory
      * 
      * @return bool|Exception
      */
-    public function getError(): Exception|bool
+    public function getError()
     {
         return $this->error;
     }
@@ -291,7 +287,6 @@ class Metno extends MetnoFactory
      * Returns error message from <Exception> object
      * @return string
      */
-    #[Pure]
     public function getErrorMesssage(): string
     {
         if ($this->isError()) {
@@ -390,7 +385,7 @@ class Metno extends MetnoFactory
      * @param $date
      * @return mixed
      */
-    public function getForecastForDate($date): mixed
+    public function getForecastForDate($date)
     {
         if (empty($this->forecastByDay)) {
             $this->getForecast();
@@ -401,5 +396,19 @@ class Metno extends MetnoFactory
         }
 
         return $this->error(new Exception("Forecast for date $date doesn't exist", MetnoInterface::DATA_EMPTY));
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $forecast = $this->getForecastJson();
+        
+        if (!is_string($forecast)) {
+            $forecast = $this->error->getMessage();
+        }
+        
+        return $forecast;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Pion\Metno;
 
-use JetBrains\PhpStorm\Pure;
 use SimpleXMLElement;
 
 /**
@@ -216,7 +215,6 @@ class MetnoForecast
     /**
      * @return bool
      */
-    #[Pure]
     public function isNight(): bool
     {
         return $this->hour >= MetnoFactory::getHourForNightForecast();
@@ -257,7 +255,7 @@ class MetnoForecast
     /**
      * @return bool|int|string
      */
-    public function getTemperature(): bool|int|string
+    public function getTemperature()
     {
         return $this->temperature;
     }
@@ -266,7 +264,7 @@ class MetnoForecast
      * Returns the symbol for the weather
      * @return MetnoSymbol|int
      */
-    public function getSymbol(): MetnoSymbol|int
+    public function getSymbol()
     {
         return $this->symbol;
     }
